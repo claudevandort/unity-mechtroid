@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private float horizontalInput = 0;
     private bool isGrounded = false;
     private bool isRunning = false;
-    public float walkSpeed = 2;
+    public float walkSpeed = 300;
     public float runMultiplier= 2;
     public float jumpForce = 5;
     public float groundSensorLength = 1.09f;
@@ -55,13 +55,13 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetButton("Fire3"))
             {
-                this.rigidBody.velocity = new Vector2(horizontalInput * walkSpeed * runMultiplier, this.rigidBody.velocity.y);
+                this.rigidBody.velocity = new Vector2(horizontalInput * Time.deltaTime * walkSpeed * runMultiplier, this.rigidBody.velocity.y);
                 isRunning = true;
                 animator.SetBool(STATE_IS_RUNNING, true);
             }
             else
             {
-                this.rigidBody.velocity = new Vector2(horizontalInput * walkSpeed, this.rigidBody.velocity.y);
+                this.rigidBody.velocity = new Vector2(horizontalInput * Time.deltaTime * walkSpeed, this.rigidBody.velocity.y);
                 isRunning = false;
                 animator.SetBool(STATE_IS_RUNNING, false);
             }
