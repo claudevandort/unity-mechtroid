@@ -130,6 +130,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 307183509037656512, guid: 2c3468a98f361d0478acea3196e20793, type: 3}
+      propertyPath: jumpForce
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 307183509037656512, guid: 2c3468a98f361d0478acea3196e20793, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 307183509037656512, guid: 2c3468a98f361d0478acea3196e20793, type: 3}
+      propertyPath: groundSensorLength
+      value: 1.09
+      objectReference: {fileID: 0}
     - target: {fileID: 5150835750032448089, guid: 2c3468a98f361d0478acea3196e20793, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -276,12 +288,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5959540106274320985, guid: 61181ec8b5d38dd4b92debe94a39d762, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5959540106274320985, guid: 61181ec8b5d38dd4b92debe94a39d762, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5959540106274320985, guid: 61181ec8b5d38dd4b92debe94a39d762, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 5959540106274320985, guid: 61181ec8b5d38dd4b92debe94a39d762, type: 3}
       propertyPath: m_LocalPosition.z

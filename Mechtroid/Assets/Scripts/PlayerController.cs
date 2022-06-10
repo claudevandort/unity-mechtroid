@@ -7,10 +7,19 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigidBody;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-    private float horizontalInput;
+    private float horizontalInput = 0;
+    private bool isGrounded = false;
+    private bool isRunning = false;
     public float walkSpeed = 2;
+    public float runMultiplier= 2;
+    public float jumpForce = 5;
+    public float groundSensorLength = 1.09f;
+
+    public LayerMask groundMask;
 
     private const string STATE_IS_MOVING = "isMoving";
+    private const string STATE_IS_RUNNING = "isRunning";
+    private const string STATE_IS_GROUNDED = "isGrounded";
 
     private void Awake()
     {
@@ -28,20 +37,34 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Jump();
+        Move();
         animator.SetBool(STATE_IS_MOVING, IsMoving());
+        animator.SetBool(STATE_IS_GROUNDED, IsGrounded());
     }
 
     private void FixedUpdate()
     {
-        Move();
+
     }
 
     private void Move()
     {
         horizontalInput = Input.GetAxis("Horizontal");
-        if (horizontalInput != 0)
+        if (horizontalInput != 0 && isGrounded)
         {
-            this.rigidBody.velocity = new Vector2(horizontalInput * walkSpeed, 0);
+            if (Input.GetButton("Fire3"))
+            {
+                this.rigidBody.velocity = new Vector2(horizontalInput * walkSpeed * runMultiplier, this.rigidBody.velocity.y);
+                isRunning = true;
+                animator.SetBool(STATE_IS_RUNNING, true);
+            }
+            else
+            {
+                this.rigidBody.velocity = new Vector2(horizontalInput * walkSpeed, this.rigidBody.velocity.y);
+                isRunning = false;
+                animator.SetBool(STATE_IS_RUNNING, false);
+            }
             if (horizontalInput < 0)
             {
                 spriteRenderer.flipX = true;
@@ -53,5 +76,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Jump()
+    {
+        isGrounded = IsGrounded();
+        if (Input.GetButtonDown("Jump") && isGrounded && !isRunning)
+        {
+            rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
+    }
+
     bool IsMoving() => this.rigidBody.velocity.x != 0;
+
+    bool IsGrounded()
+    {
+        Debug.DrawRay(this.transform.position, Vector2.down * groundSensorLength, Color.red);
+        return Physics2D.Raycast(this.transform.position, Vector2.down, groundSensorLength, groundMask);
+    }
 }
