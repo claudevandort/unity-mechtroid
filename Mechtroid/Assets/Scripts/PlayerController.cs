@@ -5,12 +5,16 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rigidBody;
+    private BoxCollider2D boxCollider;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    public Transform bulletPrefab;
+    public Transform muzzlePrefab;
+    private GameObject shooter;
     private float horizontalInput = 0;
     private bool isGrounded = false;
     private bool isRunning = false;
-    public float walkSpeed = 300;
+    public float walkSpeed = 500;
     public float runMultiplier= 2;
     public float jumpForce = 5;
     public float groundSensorLength = 1.09f;
@@ -26,6 +30,7 @@ public class PlayerController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        shooter = GameObject.Find("Shooter");
     }
 
     // Start is called before the first frame update
@@ -39,8 +44,9 @@ public class PlayerController : MonoBehaviour
     {
         Jump();
         Move();
+        Shoot();
         animator.SetBool(STATE_IS_MOVING, IsMoving());
-        animator.SetBool(STATE_IS_GROUNDED, IsGrounded());
+        animator.SetBool(STATE_IS_GROUNDED, isGrounded);
     }
 
     private void FixedUpdate()
@@ -78,18 +84,32 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        isGrounded = IsGrounded();
         if (Input.GetButtonDown("Jump") && isGrounded && !isRunning)
         {
             rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
 
+    private void Shoot()
+    {
+        if(Input.GetButtonDown("Fire1"))
+        {
+            float angle = this.spriteRenderer.flipX ? 180 : 0;
+            Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            Instantiate(muzzlePrefab, shooter.transform.position, rotation);
+            Instantiate(bulletPrefab, shooter.transform.position, rotation);
+        }
+    }
+
     bool IsMoving() => this.rigidBody.velocity.x != 0;
 
-    bool IsGrounded()
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.DrawRay(this.transform.position, Vector2.down * groundSensorLength, Color.red);
-        return Physics2D.Raycast(this.transform.position, Vector2.down, groundSensorLength, groundMask);
+        isGrounded = collision != null && (((1 << collision.gameObject.layer) & groundMask) != 0);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        isGrounded = false;
     }
 }
