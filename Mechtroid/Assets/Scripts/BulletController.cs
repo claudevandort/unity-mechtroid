@@ -9,6 +9,7 @@ public class BulletController : MonoBehaviour
     private float initialPosition;
     public Transform midAirExplosionPrefab;
     public float maxDistance = 10;
+    public int damagePoints = 25;
 
     private void Awake()
     {
@@ -32,6 +33,19 @@ public class BulletController : MonoBehaviour
     {
         if(Mathf.Abs(transform.position.x - initialPosition) >= maxDistance)
         {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision != null)
+        {
+            if (collision.gameObject.tag == "Player")
+                collision.gameObject.GetComponent<PlayerController>().TakeDamage(damagePoints);
+            else if(collision.gameObject.tag == "Enemy")
+                collision.gameObject.GetComponent<EnemyController>().TakeDamage(damagePoints);
+            Instantiate(midAirExplosionPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

@@ -13,11 +13,11 @@ GameObject:
   - component: {fileID: 5150835750032448095}
   - component: {fileID: 1981979172}
   - component: {fileID: 1981979171}
-  - component: {fileID: 307183509037656512}
   - component: {fileID: 1861706347}
+  - component: {fileID: -2717945761171771927}
   m_Layer: 0
-  m_Name: Player
-  m_TagString: Player
+  m_Name: Enemy
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,28 +156,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5557973, y: 2.2183218}
   m_EdgeRadius: 0
---- !u!114 &307183509037656512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5150835750032448092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 381ace2084a1605498475fd32b4b5bf8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 9193715390472114796, guid: 5e145f178efbe774abf10894540674fd, type: 3}
-  muzzlePrefab: {fileID: 8065577290389312822, guid: 6a8de55b670ac594795e3aed2beac658, type: 3}
-  groundExplosionPrefab: {fileID: 8711720928079122519, guid: a4a8afb5516f36a4ea407acbc7d4422a, type: 3}
-  walkSpeed: 500
-  runMultiplier: 2
-  jumpForce: 5
-  healthPoints: 100
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!61 &1861706347
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -204,3 +182,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5557973, y: 0.12172055}
   m_EdgeRadius: 0
+--- !u!114 &-2717945761171771927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5150835750032448092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e3b2cb9da379b4999913dfe4a13ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 9193715390472114796, guid: 5e145f178efbe774abf10894540674fd, type: 3}
+  muzzlePrefab: {fileID: 8065577290389312822, guid: 6a8de55b670ac594795e3aed2beac658, type: 3}
+  groundExplosionPrefab: {fileID: 8711720928079122519, guid: a4a8afb5516f36a4ea407acbc7d4422a, type: 3}
+  walkSpeed: 500
+  runMultiplier: 2
+  jumpForce: 5
+  healthPoints: 100
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64

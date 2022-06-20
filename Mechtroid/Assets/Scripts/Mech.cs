@@ -9,7 +9,7 @@ public class Mech : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     public Transform bulletPrefab;
     public Transform muzzlePrefab;
-    protected GameObject shooter;
+    public Transform groundExplosionPrefab;
     protected float horizontalInput = 0;
     protected bool runningInput = false;
     protected bool isGrounded = false;
@@ -17,31 +17,33 @@ public class Mech : MonoBehaviour
     public float walkSpeed = 500;
     public float runMultiplier = 2;
     public float jumpForce = 5;
-    public float groundSensorLength = 1.09f;
+    public int healthPoints = 100;
 
     public LayerMask groundMask;
 
     protected const string STATE_IS_MOVING = "isMoving";
     protected const string STATE_IS_RUNNING = "isRunning";
     protected const string STATE_IS_GROUNDED = "isGrounded";
+    protected const string STATE_IS_ALIVE = "isAlive";
 
     protected void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        shooter = GameObject.Find("Shooter");
     }
 
     protected void Start()
     {
         animator.SetBool(STATE_IS_MOVING, false);
+        animator.SetBool(STATE_IS_ALIVE, true);
     }
 
     protected void Update()
     {
         animator.SetBool(STATE_IS_MOVING, IsMoving());
         animator.SetBool(STATE_IS_GROUNDED, isGrounded);
+        animator.SetBool(STATE_IS_ALIVE, IsAlive());
     }
 
     protected void Move(float horizontalInput, bool isRunning)
@@ -76,21 +78,51 @@ public class Mech : MonoBehaviour
 
     public void Shoot()
     {
-        float angle = this.spriteRenderer.flipX ? 180 : 0;
+        float angle;
+        Vector3 shootingOffset, shootingPosition;
+        if (this.spriteRenderer.flipX)
+        {
+            angle = 180;
+            shootingOffset = new Vector3(-spriteRenderer.size.x / 2, 0.2f, 0);
+        }
+        else
+        {
+            angle = 0;
+            shootingOffset = new Vector3(spriteRenderer.size.x / 2, 0.2f, 0);
+        }
+        shootingPosition = this.transform.position + shootingOffset;
         Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        Instantiate(muzzlePrefab, shooter.transform.position, rotation);
-        Instantiate(bulletPrefab, shooter.transform.position, rotation);
+        Instantiate(muzzlePrefab, shootingPosition, rotation);
+        Instantiate(bulletPrefab, shootingPosition, rotation);
     }
 
     protected bool IsMoving() => this.rigidBody.velocity.x != 0;
 
-    private void OnTriggerStay2D(Collider2D collision)
+    protected bool IsAlive() => this.healthPoints > 0;
+
+    protected void OnTriggerStay2D(Collider2D collision)
     {
         isGrounded = collision != null && (((1 << collision.gameObject.layer) & groundMask) != 0);
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected  void OnTriggerExit2D(Collider2D collision)
     {
         isGrounded = false;
+    }
+
+    public void TakeDamage(int damageDealt)
+    {
+        this.healthPoints -= damageDealt;
+        if(healthPoints <= 0)
+        {
+            healthPoints = 0;
+            // Death();
+        }
+    }
+
+    protected void Death()
+    {
+        Instantiate(groundExplosionPrefab, this.transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }
