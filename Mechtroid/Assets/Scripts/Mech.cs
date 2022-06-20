@@ -17,7 +17,6 @@ public class Mech : MonoBehaviour
     public float walkSpeed = 500;
     public float runMultiplier = 2;
     public float jumpForce = 5;
-    public int healthPoints = 100;
 
     public LayerMask groundMask;
 
@@ -25,6 +24,15 @@ public class Mech : MonoBehaviour
     protected const string STATE_IS_RUNNING = "isRunning";
     protected const string STATE_IS_GROUNDED = "isGrounded";
     protected const string STATE_IS_ALIVE = "isAlive";
+
+    protected int minHealth = 0;
+    protected int maxHealth = 100;
+    protected int _currentHealth = 100;
+    [SerializeField] protected int currentHealth
+    {
+        get { return _currentHealth; }
+        set { _currentHealth = Mathf.Clamp(value, minHealth, maxHealth); }
+    }
 
     protected void Awake()
     {
@@ -80,7 +88,7 @@ public class Mech : MonoBehaviour
     {
         float angle;
         Vector3 shootingOffset, shootingPosition;
-        if (this.spriteRenderer.flipX)
+        if (spriteRenderer.flipX)
         {
             angle = 180;
             shootingOffset = new Vector3(-spriteRenderer.size.x / 2, 0.2f, 0);
@@ -90,15 +98,15 @@ public class Mech : MonoBehaviour
             angle = 0;
             shootingOffset = new Vector3(spriteRenderer.size.x / 2, 0.2f, 0);
         }
-        shootingPosition = this.transform.position + shootingOffset;
+        shootingPosition = transform.position + shootingOffset;
         Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         Instantiate(muzzlePrefab, shootingPosition, rotation);
         Instantiate(bulletPrefab, shootingPosition, rotation);
     }
 
-    protected bool IsMoving() => this.rigidBody.velocity.x != 0;
+    protected bool IsMoving() => rigidBody.velocity.x != 0;
 
-    protected bool IsAlive() => this.healthPoints > 0;
+    protected bool IsAlive() => currentHealth > 0;
 
     protected void OnTriggerStay2D(Collider2D collision)
     {
@@ -112,17 +120,6 @@ public class Mech : MonoBehaviour
 
     public void TakeDamage(int damageDealt)
     {
-        this.healthPoints -= damageDealt;
-        if(healthPoints <= 0)
-        {
-            healthPoints = 0;
-            // Death();
-        }
-    }
-
-    protected void Death()
-    {
-        Instantiate(groundExplosionPrefab, this.transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        currentHealth -= damageDealt;
     }
 }
