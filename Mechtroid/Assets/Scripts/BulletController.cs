@@ -9,7 +9,7 @@ public class BulletController : MonoBehaviour
     private float initialPosition;
     public Transform midAirExplosionPrefab;
     public float maxDistance = 10;
-    public int damagePoints = 25;
+    public int damagePoints = 20;
 
     private void Awake()
     {

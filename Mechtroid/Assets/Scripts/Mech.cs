@@ -27,7 +27,8 @@ public class Mech : MonoBehaviour
 
     protected int minHealth = 0;
     protected int maxHealth = 100;
-    protected int _currentHealth = 100;
+    protected int _currentHealth;
+    public HealthBar healthBar;
     [SerializeField] protected int currentHealth
     {
         get { return _currentHealth; }
@@ -43,6 +44,8 @@ public class Mech : MonoBehaviour
 
     protected void Start()
     {
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
         animator.SetBool(STATE_IS_MOVING, false);
         animator.SetBool(STATE_IS_ALIVE, true);
     }
@@ -121,5 +124,6 @@ public class Mech : MonoBehaviour
     public void TakeDamage(int damageDealt)
     {
         currentHealth -= damageDealt;
+        healthBar.SetHealth(currentHealth);
     }
 }
