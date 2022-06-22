@@ -25,6 +25,8 @@ public class Mech : MonoBehaviour
     protected const string STATE_IS_GROUNDED = "isGrounded";
     protected const string STATE_IS_ALIVE = "isAlive";
 
+    public GameObject light2d;
+
     protected int minHealth = 0;
     protected int maxHealth = 100;
     protected int _currentHealth;
@@ -68,6 +70,12 @@ public class Mech : MonoBehaviour
             this.isRunning = isRunning;
             animator.SetBool(STATE_IS_RUNNING, isRunning);
             spriteRenderer.flipX = horizontalInput < 0;
+            if (light2d != null)
+            {
+                float angle = horizontalInput < 0 ? 90 : -90;
+                Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                light2d.transform.rotation = rotation;
+            }
         }
     }
 
